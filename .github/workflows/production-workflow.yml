@@ -1,0 +1,160 @@
+name: Test and Deploy the Project
+on:
+  # pull_request:
+  #   types:
+  #     - opened
+  #     - closed
+
+  # pull_request:
+  #   paths:
+  #     - "auth/**"
+
+  push:
+    branches:
+      - "production"
+      - "prod-*"
+      - "prod/**"
+
+    paths:
+      - "auth/**"
+
+    # paths-ignore:
+    #   - ".github/workflows/*"
+
+  workflow_dispatch:
+
+env:
+  TEST_VARIABLE: "test-variable"
+
+jobs:
+  test:
+    #environment: testing
+    env:
+      PORT: "3007"
+      DB_HOST: ${{ secrets.DB_HOST }}
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+        uses: actions/checkout@v3
+
+      - name: Install nodejs
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Cache dependencies
+        id: cache
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm ci
+
+      - name: Lint code
+        continue-on-error: false
+        run: npm run lint
+
+      - name: Run tests
+        id: run-tests
+        run: npm run test
+
+      - name: Upload test report
+        if: failure() && steps.run-tests.outcome == 'failure' # failure(), success(), always(), cancelled()
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-report
+          path: test.json
+
+  build:
+    #environment: production
+    env:
+      PORT: "3008"
+      DB_HOST: ${{ secrets.DB_HOST }}
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+
+    needs: [test]
+    runs-on: ubuntu-latest
+    outputs:
+      js-filename: ${{ steps.publish.outputs.js-filename }}
+    steps:
+      - name: Get code
+        uses: actions/checkout@v3
+
+      - name: Install nodejs
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Cache dependencies
+        id: cache
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm ci
+
+      - name: Build code
+        run: npm run build
+
+      - name: Publish JS filename
+        id: publish
+        run: find dist/assets/*.js -type f -execdir echo 'js-filename={}' >> $GITHUB_OUTPUT ';'
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist-files
+          path: dist
+          # path: |
+          #   dist
+          #   package.json
+
+  deploy:
+    #environment: production
+    env:
+      PORT: "3009"
+      DB_HOST: ${{ secrets.DB_HOST }}
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: dist-files
+
+      - name: Output build artifacts
+        run: ls
+
+      - name: Output JS filename
+        run: echo "${{ needs.build.outputs.js.filename }}"
+
+      - name: Logging env variables
+        run: |
+          echo "DB_NAME: ${{ env.DB_NAME }}"
+          echo "TEST_VARIABLE: $TEST_VARIABLE"
+
+      - name: Upload project
+        run: echo "Uploading project.."
+
+  report:
+    needs: [lint, deploy]
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Output information
+        run: |
+          echo "Something went wrong"
+          echo "${{ toJSON(github) }}"

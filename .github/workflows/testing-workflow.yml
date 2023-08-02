@@ -1,0 +1,64 @@
+name: Test Project
+on:
+  push:
+    branches:
+      - "testing"
+      - "test-*"
+      - "test/**"
+
+    paths-ignore:
+      - ".github/workflows/*"
+
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container:
+      image: node:16
+      env:
+        MY_TEST_VARIABLE: test-variable
+        MY_MONGODB_PROTOCOL: mongodb
+        MY_DB_HOST: test-mongodb
+        MY_DB_USER: ${{ secrets.DB_USER }}
+        MY_DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+
+    services:
+      test-mongodb:
+        image: mongo:latest
+        env:
+          MONGO_INITDB_ROOT_USERNAME: ${{ secrets.DB_USER }}
+          MONGO_INITDB_ROOT_PASSWORD: ${{ secrets.DB_PASSWORD }}
+
+      test-redis:
+        image: redis
+
+    steps:
+      - name: Get code
+        uses: actions/checkout@v3
+
+      - name: Install nodejs
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm run test
+
+  deploy:
+    needs: [test]
+    uses: "./.github/workflows/reusable-deploy-workflow.yml"
+    with:
+      artifact-name: dist-files
+    secrets:
+      some-secret: ${{ secrets.SOME_SECRET }}
+
+  print-deploy-result:
+    needs: [deploy]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print deployment result
+        run: "${{ needs.deploy.outputs.result }}"

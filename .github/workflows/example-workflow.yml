@@ -1,0 +1,9 @@
+name: Output information
+on: [workflow_dispatch, issues]
+jobs:
+  info:
+    if: ${{ github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Output Github context
+        run: echo "${{ toJSON(github) }}"
