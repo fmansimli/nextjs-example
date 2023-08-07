@@ -8,7 +8,9 @@ const ELEMENTS = [
   { title: "logo slider", href: "/elements/logo-slider" },
   { title: "drag-drop", href: "/elements/drag-drop" },
   { title: "dynamic componenets", href: "/dynamic" },
-  { title: "stepper", href: "/elements/stepper-page" }
+  { title: "stepper", href: "/elements/stepper-page" },
+  { title: "tanstack table users", href: "/elements/tanstack-table-users" },
+  { title: "tanstack table todos", href: "/elements/tanstack-table-todos" }
 ];
 
 const Page: NextPage<IProps> = (props) => {

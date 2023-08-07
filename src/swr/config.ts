@@ -8,8 +8,8 @@ export const defaultValues: SWRConfiguration = {
   revalidateOnReconnect: true,
   refreshWhenHidden: false,
   refreshWhenOffline: false,
-  onError(err, key, config) {
-    if (err.status !== 403 && err.status !== 404) {
+  onError(err, _key, _config) {
+    if (err?.status !== 403 && err?.status !== 404) {
       //
     }
   },

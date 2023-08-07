@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "git": "git add . && git commit -m \"$npm_package_name ($npm_package_version) ## $(date) ## \" && git push origin master",
-    "dev": "next dev",
+    "dev": "next dev -p 3002",
     "turbo": "next dev --turbo",
     "build": "next build",
     "start": "next start",
@@ -14,6 +14,7 @@
   "dependencies": {
     "@headlessui/react": "^1.7.16",
     "@heroicons/react": "^2.0.18",
+    "@tanstack/react-table": "^8.9.3",
     "axios": "^1.4.0",
     "clsx": "^2.0.0",
     "framer-motion": "^10.15.0",
