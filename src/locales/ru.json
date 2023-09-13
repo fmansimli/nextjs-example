@@ -2,5 +2,6 @@
   "desc": "desc in ru",
   "title": "title in ru",
   "login-link": "войти",
-  "logout-link": "выйти"
+  "logout-link": "выйти",
+  "home-page": "Домашняя страница"
 }
