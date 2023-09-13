@@ -9,7 +9,7 @@ export const useLocale = () => {
   const resource: any = locale === "en" ? en : locale === "ru" ? ru : az;
 
   const t = (key: string) => {
-    return resource[key] || "key";
+    return resource[key] || key;
   };
 
   return { t };
