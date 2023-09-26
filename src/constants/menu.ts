@@ -10,6 +10,11 @@ export const LINKS: any[] = [
     secure: false
   },
   {
+    title: { az: "Fayllar", en: "Files", ru: "Файлы" },
+    href: "/files",
+    secure: false
+  },
+  {
     title: { az: "Elementlər", en: "Elements", ru: "Элементы" },
     href: "/elements",
     secure: true
