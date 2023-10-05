@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import type { NextPage } from "next";
 import Link from "next/link";
 
@@ -18,17 +19,25 @@ const data = {
 interface IPageProps {}
 
 const FilePage: NextPage<IPageProps> = (_props) => {
+  const [pageRendered, setPageRendered] = useState(false);
+
+  useEffect(() => {
+    setPageRendered(true);
+  }, []);
+
   return (
     <div className="w-full p-2 py-10">
       <div className="flex w-full flex-col gap-10 p-5">
         <div className="flex items-center gap-10">
           <div>
-            <PDFDownloadLink
-              document={<IdentityCard data={data} author="Farid Mansimli" show />}
-              fileName="example-pdf"
-              className="rounded-lg bg-indigo-300 p-3">
-              Download this PDF
-            </PDFDownloadLink>
+            {pageRendered && (
+              <PDFDownloadLink
+                document={<IdentityCard data={data} author="Farid Mansimli" show />}
+                fileName="example-pdf"
+                className="rounded-lg bg-indigo-300 p-3">
+                Download this PDF
+              </PDFDownloadLink>
+            )}
           </div>
           <Link className="text-lg underline" href="/files/search">
             Search
