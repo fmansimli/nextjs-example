@@ -26,9 +26,8 @@ const Page: NextPage<IProps> = (props) => {
 
 export default Page;
 
-export async function getStaticProps(
-  ctx: GetStaticPropsContext
-): Promise<GetStaticPropsResult<IProps>> {
+// prettier-ignore
+export async function getStaticProps(_ctx: GetStaticPropsContext): Promise<GetStaticPropsResult<IProps>> {
   try {
     const { data: posts } = await http.get("/posts");
     return {

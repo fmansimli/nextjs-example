@@ -1,4 +1,4 @@
-import { SWRConfiguration } from "swr";
+import type { SWRConfiguration } from "swr";
 import { fetcher } from "./fetcher";
 
 export const defaultValues: SWRConfiguration = {
@@ -8,9 +8,11 @@ export const defaultValues: SWRConfiguration = {
   revalidateOnReconnect: true,
   refreshWhenHidden: false,
   refreshWhenOffline: false,
+  shouldRetryOnError: true,
+  dedupingInterval: 2000,
   onError(err, _key, _config) {
     if (err?.status !== 403 && err?.status !== 404) {
-      //
+      return;
     }
   },
   onErrorRetry(err, key, config, revalidate, { retryCount }) {
@@ -22,3 +24,6 @@ export const defaultValues: SWRConfiguration = {
   },
   fetcher: fetcher
 };
+
+// errorRetryInterval = 5000;
+// errorRetryCount
