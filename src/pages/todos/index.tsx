@@ -12,6 +12,25 @@ const Page: NextPage<IProps> = () => {
 
   const { t } = useLocale();
 
+  function downloadHandler() {
+    const base64File = "SGVsbG8gV29ybGQh";
+
+    const blob = new Blob([atob(base64File)], { type: "application/octet-stream" });
+
+    const blobUrl = window.URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.style.display = "none";
+    a.href = blobUrl;
+    a.download = "downloaded-file.txt";
+
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    window.URL.revokeObjectURL(blobUrl);
+  }
+
   if (isLoading || isValidating) {
     return (
       <div className="flex h-full  w-full items-center justify-center">
@@ -30,6 +49,10 @@ const Page: NextPage<IProps> = () => {
           </button>
           <button className="rounded-xl bg-slate-300 px-4 py-3" onClick={() => mutate([])}>
             clear
+          </button>
+
+          <button className="rounded-xl bg-slate-300 px-4 py-3" onClick={downloadHandler}>
+            download
           </button>
         </div>
       </div>
