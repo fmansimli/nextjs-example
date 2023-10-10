@@ -15,20 +15,24 @@ const Page: NextPage<IProps> = () => {
   function downloadHandler() {
     const base64File = "SGVsbG8gV29ybGQh";
 
-    const blob = new Blob([atob(base64File)], { type: "application/octet-stream" });
+    try {
+      const blob = new Blob([atob(base64File)], { type: "application/octet-stream" });
 
-    const blobUrl = window.URL.createObjectURL(blob);
+      const blobUrl = window.URL.createObjectURL(blob);
 
-    const a = document.createElement("a");
-    a.style.display = "none";
-    a.href = blobUrl;
-    a.download = "downloaded-file.txt";
+      const a = document.createElement("a");
+      a.style.display = "none";
+      a.href = blobUrl;
+      a.download = "downloaded-file.txt";
 
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
 
-    window.URL.revokeObjectURL(blobUrl);
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      alert("something went wrong while downloading the file.");
+    }
   }
 
   if (isLoading || isValidating) {
