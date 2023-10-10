@@ -1,5 +1,7 @@
-import { useState, useMemo, useEffect } from "react";
 import type { NextPage } from "next";
+import { useState, useEffect } from "react";
+
+import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
 
 import { BOOKS } from "@/_features/files/data/data";
@@ -7,34 +9,43 @@ import { BOOKS } from "@/_features/files/data/data";
 interface IPageProps {}
 
 const Page: NextPage<IPageProps> = (_props) => {
-  const { replace, query, pathname } = useRouter();
-  const [searchParams, setSearchParams] = useState({ name: "", onlyTech: false });
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const [filteredBooks, setFilteredBooks] = useState<any[]>([]);
 
   useEffect(() => {
-    if (query?.name) {
-      setSearchParams({
-        name: query.name.toString(),
-        onlyTech: query.onlyTech === "true"
+    if (searchParams.has("initialized")) {
+      const filtered = BOOKS.filter((book) => {
+        if (searchParams.get("onlyTech") === "on") {
+          return (
+            book.name.toLowerCase().includes(searchParams.get("name") || "") && book.onlyTech
+          );
+        } else {
+          return book.name.toLowerCase().includes(searchParams.get("name") || "");
+        }
       });
-    }
-  }, [query]);
 
-  const filteredBooks = useMemo(() => {
-    return BOOKS.filter((book) => {
-      if (query.onlyTech === "true") {
-        return (
-          book.name.toLowerCase().includes(query.name as string) && book.onlyTech === true
-        );
-      } else {
-        return book.name.toLowerCase().includes(searchParams.name.toLowerCase());
-      }
-    });
-  }, [query]);
+      setFilteredBooks(filtered);
+    }
+  }, [searchParams]);
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    replace({ pathname, query: { ...searchParams } });
+    // const initialParams = new URLSearchParams(searchParams.toString());
+    // router.replace({ search: searchParams.toString() });
+
+    // const params = Object.fromEntries(searchParams);
+    // const values = Object.fromEntries(new FormData(e.currentTarget));
+
+    const params = Object.fromEntries(new FormData(e.currentTarget));
+    const newParams = new URLSearchParams(params as any);
+    newParams.set("initialized", "true");
+
+    router.replace({ search: newParams.toString() });
+
+    //router.replace(pathname + "?" + newParams.toString());
   }
 
   return (
@@ -53,21 +64,17 @@ const Page: NextPage<IPageProps> = (_props) => {
                 type="text"
                 name="name"
                 id="name"
-                value={searchParams.name}
-                onChange={(e) => setSearchParams((old) => ({ ...old, name: e.target.value }))}
+                defaultValue={searchParams.get("name") || ""}
               />
             </div>
 
             <div className="flex items-center gap-4">
-              <label htmlFor="onlyTechnical">only technical</label>
+              <label htmlFor="onlyTech">only technical</label>
               <input
                 type="checkbox"
-                name="onlyTechnical"
-                id="onlyTechnical"
-                checked={searchParams.onlyTech}
-                onChange={(e) =>
-                  setSearchParams((old) => ({ ...old, onlyTech: e.target.checked }))
-                }
+                name="onlyTech"
+                id="onlyTech"
+                defaultChecked={searchParams.get("onlyTech") === "on"}
               />
             </div>
 

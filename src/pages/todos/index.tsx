@@ -1,4 +1,4 @@
-import { NextPage } from "next";
+import type { NextPage } from "next";
 
 import useSWR from "swr";
 import { useLocale } from "@/hooks";
@@ -17,7 +17,6 @@ const Page: NextPage<IProps> = () => {
 
     try {
       const blob = new Blob([atob(base64File)], { type: "application/octet-stream" });
-
       const blobUrl = window.URL.createObjectURL(blob);
 
       const a = document.createElement("a");
@@ -33,6 +32,10 @@ const Page: NextPage<IProps> = () => {
     } catch (error) {
       alert("something went wrong while downloading the file.");
     }
+  }
+
+  function clearHandler() {
+    mutate([]);
   }
 
   if (isLoading || isValidating) {
@@ -51,7 +54,7 @@ const Page: NextPage<IProps> = () => {
           <button className="rounded-xl bg-slate-300 px-4 py-3" onClick={() => mutate()}>
             get todos
           </button>
-          <button className="rounded-xl bg-slate-300 px-4 py-3" onClick={() => mutate([])}>
+          <button className="rounded-xl bg-slate-300 px-4 py-3" onClick={clearHandler}>
             clear
           </button>
 

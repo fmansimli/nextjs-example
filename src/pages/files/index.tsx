@@ -39,7 +39,7 @@ const FilePage: NextPage<IPageProps> = (_props) => {
               </PDFDownloadLink>
             )}
           </div>
-          <Link className="text-lg underline" href="/files/search">
+          <Link className="text-lg underline" href="/files/search?initialized=true">
             Search
           </Link>
         </div>
