@@ -63,6 +63,23 @@ const Page = () => {
     getPaginationRowModel: getPaginationRowModel()
   });
 
+  if (isLoading) {
+    return (
+      <div className="flex h-full  w-full items-center justify-center">
+        <span className="text-xl text-red-800">Loading...</span>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex h-full  w-full items-center justify-center">
+        <span className="text-xl text-red-800">
+          something went wrong when loading users...
+        </span>
+      </div>
+    );
+  }
   return (
     <div className="flex min-h-screen w-full p-5">
       <div>
