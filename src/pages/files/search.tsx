@@ -1,5 +1,4 @@
 import type { NextPage } from "next";
-import { useState, useEffect } from "react";
 
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
@@ -12,11 +11,8 @@ const Page: NextPage<IPageProps> = (_props) => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const [filteredBooks, setFilteredBooks] = useState<any[]>([]);
-
-  useEffect(() => {
-    if (searchParams.has("initialized")) {
-      const filtered = BOOKS.filter((book) => {
+  const filteredBooks = searchParams.has("initialized")
+    ? BOOKS.filter((book) => {
         if (searchParams.get("onlyTech") === "on") {
           return (
             book.name.toLowerCase().includes(searchParams.get("name") || "") && book.onlyTech
@@ -24,11 +20,8 @@ const Page: NextPage<IPageProps> = (_props) => {
         } else {
           return book.name.toLowerCase().includes(searchParams.get("name") || "");
         }
-      });
-
-      setFilteredBooks(filtered);
-    }
-  }, [searchParams]);
+      })
+    : [];
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
