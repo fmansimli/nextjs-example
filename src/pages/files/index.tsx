@@ -28,7 +28,7 @@ const FilePage: NextPage<IPageProps> = (_props) => {
   return (
     <div className="w-full p-2 py-10">
       <div className="flex w-full flex-col gap-10 p-5">
-        <div className="flex items-center gap-10">
+        <div className="flex flex-wrap items-center gap-10">
           <div>
             {pageRendered && (
               <PDFDownloadLink
