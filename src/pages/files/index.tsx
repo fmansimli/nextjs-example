@@ -42,6 +42,22 @@ const FilePage: NextPage<IPageProps> = (_props) => {
           <Link className="text-lg underline" href="/files/search?initialized=true">
             Search
           </Link>
+
+          <Link className="text-lg underline" href="/files/prevent-xss-binary">
+            XSS (binary)
+          </Link>
+
+          <Link className="text-lg underline" href="/files/prevent-xss-base64">
+            XSS (base64)
+          </Link>
+
+          <Link className="text-lg underline" href="/files/upload-image-base64">
+            image (base64)
+          </Link>
+
+          <Link className="text-lg underline" href="/files/upload-image-blob">
+            image (blob)
+          </Link>
         </div>
 
         <div className="flex flex-col gap-3">
