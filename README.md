@@ -1,4 +1,20 @@
-## Getting Started
+# Backporting
+
+## Simple way
+
+Fetch the changes from the remote hotfix branch
+
+```bash
+git fetch origin hotfix/issue-123
+```
+
+Create a local backport branch based on the remote hotfix branch
+
+```bash
+git switch -c backport/issue-123 origin/hotfix/issue-123
+```
+
+## Complicated way
 
 creating local backport branch from development or staging
 
