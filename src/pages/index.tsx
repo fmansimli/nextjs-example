@@ -8,6 +8,7 @@ export default function Home() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center">
       <div>{t("home-page")}...</div>
+      <p>second time, this will be changed...</p>
     </div>
   );
 }
