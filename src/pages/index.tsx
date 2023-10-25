@@ -7,7 +7,7 @@ export default function Home() {
   const { t } = useLocale();
   return (
     <div className="flex min-h-screen flex-col items-center justify-center">
-      <div>{t("home-page")}...</div>
+      <div>{t("home-page")}..</div>
       <hr />
     </div>
   );
