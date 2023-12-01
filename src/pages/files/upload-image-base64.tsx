@@ -10,10 +10,17 @@ const Page = () => {
 
     const reader = new FileReader();
 
-    reader.onload = (e) => {
-      const url = e.target?.result as string;
-      setImageUrl(url);
+    reader.onloadend = () => {
+      const base64 = reader.result as string;
+      if (base64) {
+        setImageUrl(base64);
+      }
     };
+
+    // reader.onload = (e) => {
+    //   const url = e.target?.result as string;
+    //   setImageUrl(url);
+    // };
 
     reader.readAsDataURL(file);
   }
