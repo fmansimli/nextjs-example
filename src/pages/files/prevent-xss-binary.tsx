@@ -12,7 +12,8 @@ const Page = () => {
 
     try {
       const resp = await http.get("/api/files/xss-binary?filename=" + filename, {
-        baseURL: "/"
+        baseURL: "/",
+        responseType: "blob"
       });
 
       const binaryData = resp.data;

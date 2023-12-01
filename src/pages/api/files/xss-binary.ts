@@ -11,14 +11,12 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   let filePath = "src/assets/files/" + filename;
 
   if (fs.existsSync(filePath)) {
-    const myFile = fs.readFileSync(filePath); // by deafult binary (for plain text use "utf8")
+    const myFile = fs.readFileSync(filePath);
 
-    res.setHeader("Content-Type", "application/application/octet-stream"); // more general MIME type
-    res.setHeader("Content-Length", myFile.length);
+    res.setHeader("Content-Type", "application/octet-stream"); // more general MIME type
 
-    // res.setHeader("Content-Disposition", `inline; filename="${filename}"`);
+    //res.setHeader("Content-Disposition", `inline; filename="${filename}"`);
     res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
-
     res.setHeader("Cache-Control", "no-store");
 
     res.status(200).send(myFile);
