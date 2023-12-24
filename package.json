@@ -11,7 +11,8 @@
     "lint": "next lint",
     "prepare": "husky install",
     "test:e2e": "jest",
-    "cyp": "cypress open"
+    "cypress:open": "cypress open",
+    "cyp": "cypress open --config-file tsconfig.cypress.json"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.16",
