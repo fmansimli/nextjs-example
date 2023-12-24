@@ -1,8 +1,14 @@
 import { defineConfig } from "cypress";
 
 export default defineConfig({
-  extends: "./tsconfig.json",
-  compilerOptions: {
-    moduleResolution: "Node"
+  e2e: {
+    setupNodeEvents(on, config) {},
+    baseUrl: "http://localhost:3002"
+  },
+  component: {
+    devServer: {
+      framework: "next",
+      bundler: "webpack"
+    }
   }
 });
